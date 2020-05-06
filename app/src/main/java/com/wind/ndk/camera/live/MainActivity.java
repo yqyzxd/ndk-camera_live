@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
             }catch (Exception e){
                 e.printStackTrace();
             }
-
             CameraX.bindToLifecycle((LifecycleOwner) this,getImageAnalysis(),getPreview());
         }else {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},1111);
