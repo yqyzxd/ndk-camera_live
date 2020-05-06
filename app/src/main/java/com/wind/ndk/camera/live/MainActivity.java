@@ -3,6 +3,7 @@ package com.wind.ndk.camera.live;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.view.TextureView;
@@ -18,12 +19,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
 
     private TextureView textureView;
     private HandlerThread handlerThread;
     private CameraX.LensFacing mLensFacing;
+
+    private FileOutputStream fos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,10 +40,20 @@ public class MainActivity extends AppCompatActivity {
         handlerThread.start();
         boolean granted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
+         granted &= ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
         if (granted) {
+            String dir=Environment.getExternalStorageDirectory().getAbsolutePath();
+
+            try {
+                fos=new FileOutputStream(dir+"/a.yuv");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             CameraX.bindToLifecycle((LifecycleOwner) this,getImageAnalysis(),getPreview());
         }else {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},1111);
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},1111);
         }
 
     }
@@ -75,9 +91,17 @@ public class MainActivity extends AppCompatActivity {
                 new ImageAnalysis.Analyzer() {
                     @Override
                     public void analyze(ImageProxy image, int rotationDegrees) {
-                        int w=image.getWidth();
-                        int h=image.getHeight();
-                        System.out.println("w:"+w+"   h:"+h+"  rotationDegrees:"+rotationDegrees);
+
+                        int width=image.getWidth();
+                        int height=image.getHeight();
+                        System.out.println("width:"+width+"  height:"+height);
+                        //将YUV_420_888格式的数据转成I420
+                        byte bytes[]=ImageUtil.yuv420ToI420(image.getImage());
+                        try {
+                            fos.write(bytes);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
         return imageAnalysis;
@@ -86,6 +110,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        try {
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         handlerThread.quitSafely();
     }
 }
