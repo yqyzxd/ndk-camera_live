@@ -90,14 +90,17 @@ public class MainActivity extends AppCompatActivity {
                 new ImageAnalysis.Analyzer() {
                     @Override
                     public void analyze(ImageProxy image, int rotationDegrees) {
-
                         int width=image.getWidth();
                         int height=image.getHeight();
                         System.out.println("width:"+width+"  height:"+height);
                         //将YUV_420_888格式的数据转成I420
-                        byte bytes[]=ImageUtil.yuv420ToI420(image.getImage());
+                        byte i420Bytes[]=ImageUtil.yuv420ToI420(image.getImage());
+                        //根据rotation进行旋转
+                        if (rotationDegrees==90 || rotationDegrees==270){
+
+                        }
                         try {
-                            fos.write(bytes);
+                            fos.write(i420Bytes);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

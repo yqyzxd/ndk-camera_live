@@ -13,6 +13,11 @@ public class ImageUtil {
 
     public static final String TAG="ImageUtil";
 
+    /**
+     * YUV420是一个系列 包含yv12 NV21 I420等
+     * @param image
+     * @return
+     */
     public static  byte[] yuv420ToI420(Image image) {
 
         int width=image.getWidth();
@@ -41,6 +46,17 @@ public class ImageUtil {
             int rowStride=planes[i].getRowStride();
             int pixelStride=planes[i].getPixelStride();
             if (true) {
+                /**
+                 * Y                         U
+                 * pixelStride 1             2
+                 * rowStride 576             567
+                 * width 576                 567
+                 * height 432                432
+                 * buffer size 248832        124415
+                 *
+                 * 看buffer size Y是248832 那么U应该是248832/4=62208 但实际上有124415所以另外的62207是填充数据
+                 * 为什么填充数据是62207而不是62208  ，最后一位省略了。 相当于是 U0U0U0U
+                 */
                 Log.v(TAG, "pixelStride " + pixelStride);
                 Log.v(TAG, "rowStride " + rowStride);
                 Log.v(TAG, "width " + width);
@@ -51,18 +67,20 @@ public class ImageUtil {
             int shift=(i==0)?0:1;
             int w=width>>shift;
             int h=height>>shift;
-
+            buffer.position(0);
             for (int row = 0; row < h; row++) {
+                int len=0;
                 if (pixelStride==1){
-                    buffer.get(i420Bytes,planeOffset,w);
+                    len=w;
+                    buffer.get(i420Bytes,planeOffset,len);
+                    planeOffset+=len;
                 }else {
-                    int len=w*pixelStride-1;
+                    len = w  * pixelStride -1; //按理应该是w*pixelStride，但是最后一位可能没有
                     buffer.get(rowData,0,len);
                     for (int col=0;col<w;col++){
                         i420Bytes[planeOffset++]=rowData[col*pixelStride];
                     }
                 }
-
                 if (row<h-1){
                     buffer.position((row+1)*rowStride);
                 }
@@ -70,7 +88,6 @@ public class ImageUtil {
 
             }
         }
-
 
         return i420Bytes;
     }
