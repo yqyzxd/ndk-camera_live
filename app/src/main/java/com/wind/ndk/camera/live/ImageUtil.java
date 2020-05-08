@@ -13,6 +13,9 @@ public class ImageUtil {
 
     public static final String TAG="ImageUtil";
 
+    static {
+        System.loadLibrary("native-lib");
+    }
     /**
      * YUV420是一个系列 包含yv12 NV21 I420等
      * @param image
@@ -91,4 +94,8 @@ public class ImageUtil {
 
         return i420Bytes;
     }
+
+
+
+    public static native void i420Rotate(byte[] i420Bytes,int rotation,int width,int height);
 }

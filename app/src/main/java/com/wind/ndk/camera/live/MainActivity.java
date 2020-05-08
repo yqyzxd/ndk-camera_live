@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                         byte i420Bytes[]=ImageUtil.yuv420ToI420(image.getImage());
                         //根据rotation进行旋转
                         if (rotationDegrees==90 || rotationDegrees==270){
-
+                            ImageUtil.i420Rotate(i420Bytes,rotationDegrees,width,height);
                         }
                         try {
                             fos.write(i420Bytes);
