@@ -6,7 +6,10 @@ include_directories(libyuv/include)
 add_library(
         native-lib
         SHARED
-        ../jni/com_wind_ndk_camera_live_ImageUtil.cpp)
+        ../jni/com_wind_ndk_camera_live_ImageUtil.cpp
+        ../jni/com_wind_ndk_camera_live_RtmpClient.cpp
+        JavaCallHelper.cpp
+)
 
 
 find_library(
