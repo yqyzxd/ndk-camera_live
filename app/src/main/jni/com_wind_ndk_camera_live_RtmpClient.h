@@ -9,10 +9,10 @@ extern "C" {
 #endif
 /*
  * Class:     com_wind_ndk_camera_live_RtmpClient
- * Method:    nativeInit
+ * Method:    native_init
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_wind_ndk_camera_live_RtmpClient_nativeInit
+JNIEXPORT void JNICALL Java_com_wind_ndk_camera_live_RtmpClient_native_1init
   (JNIEnv *, jobject);
 
 /*
@@ -30,6 +30,14 @@ JNIEXPORT void JNICALL Java_com_wind_ndk_camera_live_RtmpClient_native_1initVide
  */
 JNIEXPORT void JNICALL Java_com_wind_ndk_camera_live_RtmpClient_native_1connect
   (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     com_wind_ndk_camera_live_RtmpClient
+ * Method:    native_sendVideo
+ * Signature: ([B)V
+ */
+JNIEXPORT void JNICALL Java_com_wind_ndk_camera_live_RtmpClient_native_1sendVideo
+  (JNIEnv *, jobject, jbyteArray);
 
 #ifdef __cplusplus
 }

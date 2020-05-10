@@ -10,10 +10,18 @@ extern "C" {
 /*
  * Class:     com_wind_ndk_camera_live_ImageUtil
  * Method:    i420Rotate
- * Signature: ([BIII)[B
+ * Signature: ([BIII)V
  */
 JNIEXPORT void JNICALL Java_com_wind_ndk_camera_live_ImageUtil_i420Rotate
-  (JNIEnv *, jclass, jbyteArray, jint, jint, jint);
+  (JNIEnv *, jclass, jbyteArray, jbyteArray,jint, jint, jint);
+
+/*
+ * Class:     com_wind_ndk_camera_live_ImageUtil
+ * Method:    scale
+ * Signature: ([B[BIIII)V
+ */
+JNIEXPORT void JNICALL Java_com_wind_ndk_camera_live_ImageUtil_i420Scale
+  (JNIEnv *, jclass, jbyteArray, jbyteArray, jint, jint, jint, jint);
 
 #ifdef __cplusplus
 }

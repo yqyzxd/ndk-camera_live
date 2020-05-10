@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.view.TextureView;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraX;
@@ -24,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textureView = findViewById(R.id.texture_view);
+       findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               String url="rtmp://192.168.31.110:1935/myapp";
+               rtmpClient.startLive(url);
+           }
+       });
 
         boolean granted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
@@ -32,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         if (granted) {
             rtmpClient=new RtmpClient(this);
             rtmpClient.initVideo(textureView,480,640,10,640_000);
+            //rtmpClient.initVideo(textureView, 432, 576, 10, 640_000);
         }else {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},1111);
         }
@@ -42,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if(rtmpClient!=null){
+            rtmpClient.stop();
+        }
 
     }
 }

@@ -5,22 +5,21 @@
 #ifndef NDK_CAMERA_LIVE_JAVACALLHELPER_H
 #define NDK_CAMERA_LIVE_JAVACALLHELPER_H
 
-#include "../../../../../../../Library/Android/sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/jni.h"
-
+#include <jni.h>
 #define THREAD_MAIN 1
 #define THREAD_CHILD 2
 
 class JavaCallHelper {
-
-    JavaCallHelper(JavaVM* _javaVm,JNIEnv* env,jobject &_jobj);
+public:
+    JavaCallHelper(JavaVM* _javaVm,JNIEnv* env,jobject& jobj);
     ~JavaCallHelper();
 
     void onPrepare(jboolean connected,int thread=THREAD_CHILD);
 
 public:
-    JavaVM* _javaVm;
+    JavaVM*  javaVm;
     JNIEnv* env;
-    jobject_jobj;
+    jobject jobj;
     jmethodID jmid_prepare;
 };
 

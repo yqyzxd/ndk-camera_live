@@ -14,7 +14,7 @@ public class ImageUtil {
     public static final String TAG="ImageUtil";
 
     static {
-        System.loadLibrary("native-lib");
+        System.loadLibrary("ImageUtils");
     }
     /**
      * YUV420是一个系列 包含yv12 NV21 I420等
@@ -48,7 +48,7 @@ public class ImageUtil {
             ByteBuffer buffer=planes[i].getBuffer();
             int rowStride=planes[i].getRowStride();
             int pixelStride=planes[i].getPixelStride();
-            if (true) {
+            if (false) {
                 /**
                  * Y                         U
                  * pixelStride 1             2
@@ -97,5 +97,7 @@ public class ImageUtil {
 
 
 
-    public static native void i420Rotate(byte[] i420Bytes,int rotation,int width,int height);
+    public static native void i420Rotate(byte[] src,byte[] dst,int rotation,int width,int height);
+
+    public static native void i420Scale(byte[] src, byte[] dst, int srcWidth, int srcHeight, int dstWidth, int dstHeight);
 }
